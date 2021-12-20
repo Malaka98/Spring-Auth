@@ -9,8 +9,8 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import com.example.demo.util.ModelConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository repository;
 
-    // private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private void validateUserInfo(UserDTO dto) {
         StringBuilder errors = new StringBuilder();
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         validateUserInfo(dto);
         if(repository.findUserByUsername(dto.getUsername()).isPresent())
             throw new BadRequestException("Username already exists");
-       // dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+       dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         repository.save((User) ModelConverter.dtoToModel(dto));
     }
 
