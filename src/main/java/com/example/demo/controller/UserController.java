@@ -1,10 +1,7 @@
-package com.example.demose.Controllers;
+package com.example.demo.controller;
 
-import com.example.demose.Model.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")

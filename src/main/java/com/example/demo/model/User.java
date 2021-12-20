@@ -1,4 +1,4 @@
-package com.example.demose.Model;
+package com.example.demo.model;
 
 import javax.persistence.*;
 
@@ -6,14 +6,14 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User extends SuperModel {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(
             name = "user_id"
     )
-    private int id;
+    private long id;
 
     @Column(
             name = "username",
@@ -46,19 +46,32 @@ public class User {
         this.password = password;
     }
 
-    public User(int id, String username, String password) {
+    public User(long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
+    public User(String username, String firstName, String lastName, String password) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+    }
+
+    public User(String username, String firstName, String lastName) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public User() {}
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
