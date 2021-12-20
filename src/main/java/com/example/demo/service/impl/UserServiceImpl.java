@@ -2,13 +2,15 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.SuperDTO;
 import com.example.demo.dto.UserDTO;
-import com.example.demo.exception.InvalidResponseException;
+import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import com.example.demo.util.ModelConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository repository;
 
+    // private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     private void validateUserInfo(UserDTO dto) {
         StringBuilder errors = new StringBuilder();
         if(dto.getUsername().trim().length() < 6) {
@@ -33,8 +37,8 @@ public class UserServiceImpl implements UserService {
             errors.append("Password must have more than eight characters\n");
         }
 
-        if(errors.length() == 0) {
-            throw new InvalidResponseException(errors.toString());
+        if(errors.length() > 0) {
+            throw new BadRequestException(errors.toString());
         }
     }
 
@@ -42,6 +46,9 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = false)
     public void addUser(UserDTO dto) {
         validateUserInfo(dto);
+        if(repository.findUserByUsername(dto.getUsername()).isPresent())
+            throw new BadRequestException("Username already exists");
+       // dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         repository.save((User) ModelConverter.dtoToModel(dto));
     }
 
